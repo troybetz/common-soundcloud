@@ -28,8 +28,13 @@ describe('common-soundcloud', function() {
      * Mock out SoundCloud Widget API
      */
 
+    widgetMock = {
+      play: sinon.spy(),
+      pause: sinon.spy()
+    };
+
     window.SC = {
-      Widget: sinon.stub().returns({})
+      Widget: sinon.stub().returns(widgetMock)
     };
     
     loadAPIStub = sinon.stub().returns(function(cb) {
@@ -58,6 +63,22 @@ describe('common-soundcloud', function() {
     it('should create a new instance of `SC.Widget`', function() {
       var player = new SoundCloud('soundcloud-embed');
       assert.ok(SC.Widget.calledWith('soundcloud-embed'));
+    });
+  });
+
+  describe('functionality', function() {
+    it('can play a track', function() {
+      var player = new SoundCloud('soundcloud-embed');
+      player.play();
+
+      assert.ok(widgetMock.play.called);
+    });
+
+    it('can pause a track', function() {
+      var player = new SoundCloud('soundcloud-embed');
+      player.pause();
+
+      assert.ok(widgetMock.pause.called);
     });
   });
 });

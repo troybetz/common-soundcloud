@@ -36,3 +36,23 @@ SoundCloud.prototype.createPlayer = function(id) {
     self.player = new SC.Widget(id);
   });
 };
+
+/**
+ * Play the track.
+ *
+ * @api public
+ */
+
+SoundCloud.prototype.play = function() {
+  this.player.play();
+};
+
+/**
+ * Pause the track.
+ *
+ * @api public
+ */
+
+SoundCloud.prototype.pause = function() {
+  this.player.pause();
+};
