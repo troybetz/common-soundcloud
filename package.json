@@ -2,7 +2,7 @@
   "name": "common-soundcloud",
   "version": "0.0.0",
   "description": "simple wrapper over the SoundCloud HTML5 Widget API",
-  "main": "index.jsx",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:compedit/common-soundcloud.git"
