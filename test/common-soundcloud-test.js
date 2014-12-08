@@ -32,6 +32,7 @@ describe('common-soundcloud', function() {
     widgetMock = new EventEmitter();
     
     widgetMock.bind = widgetMock.addListener;
+    widgetMock.unbind = sinon.spy();
     widgetMock.play = sinon.spy();
     widgetMock.pause = sinon.spy();
 
@@ -119,6 +120,22 @@ describe('common-soundcloud', function() {
 
       player.on('end', done);
       widgetMock.emit(SC.Widget.Events.FINISH);
+    });
+  });
+
+  describe('destruction', function() {
+    it('should remove player event listeners', function() {
+      var player = new SoundCloud('soundcloud-embed');
+      player.destroy();
+      
+      assert.equal(widgetMock.unbind.callCount, 4);
+    });
+
+    it('should delete its internal player', function() {
+      var player = new SoundCloud('soundcloud-embed');
+      player.destroy();
+
+      assert.equal(player.player, undefined);
     });
   });
 });

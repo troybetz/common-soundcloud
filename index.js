@@ -46,6 +46,17 @@ SoundCloud.prototype.createPlayer = function(id) {
 };
 
 /**
+ * Destroy a player
+ *
+ * @api public
+ */
+
+SoundCloud.prototype.destroy = function() {
+  this.unbindEvents();
+  delete this.player;
+};
+
+/**
  * Play the track.
  *
  * @api public
@@ -89,4 +100,17 @@ SoundCloud.prototype.bindEvents = function() {
   self.player.bind(window.SC.Widget.Events.FINISH, function() {
     self.emit('end');
   });
+};
+
+/**
+ * Remove player event listeners;
+ *
+ * @api private
+ */
+
+SoundCloud.prototype.unbindEvents = function() {
+  this.player.unbind(window.SC.Widget.Events.READY);
+  this.player.unbind(window.SC.Widget.Events.PLAY);
+  this.player.unbind(window.SC.Widget.Events.PAUSE);
+  this.player.unbind(window.SC.Widget.Events.FINISH);
 };
