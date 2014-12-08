@@ -68,6 +68,18 @@ footer {
  * custom styles
  */
 
+ .soundcloud-container {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1em;
+}
+
+#soundcloud-embed {
+  max-width: 100%;
+}
+
 .btn {
   text-align: center;
   margin: 2em 1em;
