@@ -40,7 +40,7 @@ SoundCloud.prototype = new EventEmitter();
 SoundCloud.prototype.createPlayer = function(id) {
   var self = this;
   sdk(function(err, SC) {
-    self.player = new SC.Widget(id);
+    self.player = new window.SC.Widget(id);
     self.bindEvents();
   });
 };
@@ -74,19 +74,19 @@ SoundCloud.prototype.pause = function() {
 SoundCloud.prototype.bindEvents = function() {
   var self = this;
   
-  self.player.bind(SC.Widget.Events.READY, function() {
+  self.player.bind(window.SC.Widget.Events.READY, function() {
     self.emit('ready');
   });
 
-  self.player.bind(SC.Widget.Events.PLAY, function() {
+  self.player.bind(window.SC.Widget.Events.PLAY, function() {
     self.emit('play');
   });
 
-  self.player.bind(SC.Widget.Events.PAUSE, function() {
+  self.player.bind(window.SC.Widget.Events.PAUSE, function() {
     self.emit('pause');
   });
 
-  self.player.bind(SC.Widget.Events.FINISH, function() {
+  self.player.bind(window.SC.Widget.Events.FINISH, function() {
     self.emit('end');
   });
 };
