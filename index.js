@@ -2,6 +2,7 @@
  * Module dependencies
  */
 
+var EventEmitter = require('events');
 var loadAPI = require('./lib/load-api');
 var prepareEmbed = require('./lib/prepare-embed');
 
@@ -24,6 +25,12 @@ function SoundCloud(id) {
 }
 
 /**
+ * Mixin events
+ */
+
+SoundCloud.prototype = new EventEmitter();
+
+/**
  * Create a controller for the widget
  *
  * @param {String} id of embedded widget
@@ -34,6 +41,7 @@ SoundCloud.prototype.createPlayer = function(id) {
   var self = this;
   sdk(function(err, SC) {
     self.player = new SC.Widget(id);
+    self.bindEvents();
   });
 };
 
@@ -55,4 +63,30 @@ SoundCloud.prototype.play = function() {
 
 SoundCloud.prototype.pause = function() {
   this.player.pause();
+};
+
+/**
+ * Bind events to player
+ *
+ * @api private
+ */
+
+SoundCloud.prototype.bindEvents = function() {
+  var self = this;
+  
+  self.player.bind(SC.Widget.Events.READY, function() {
+    self.emit('ready');
+  });
+
+  self.player.bind(SC.Widget.Events.PLAY, function() {
+    self.emit('play');
+  });
+
+  self.player.bind(SC.Widget.Events.PAUSE, function() {
+    self.emit('pause');
+  });
+
+  self.player.bind(SC.Widget.Events.FINISH, function() {
+    self.emit('end');
+  });
 };

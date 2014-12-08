@@ -2,6 +2,7 @@
  * Module dependencies
  */
 
+var EventEmitter = require('events');
 var assert = require('assert');
 var sinon = require('sinon');
 var proxyquire = require('proxyquireify')(require);
@@ -28,13 +29,21 @@ describe('common-soundcloud', function() {
      * Mock out SoundCloud Widget API
      */
 
-    widgetMock = {
-      play: sinon.spy(),
-      pause: sinon.spy()
-    };
+    widgetMock = new EventEmitter();
+    
+    widgetMock.bind = widgetMock.addListener;
+    widgetMock.play = sinon.spy();
+    widgetMock.pause = sinon.spy();
 
     window.SC = {
       Widget: sinon.stub().returns(widgetMock)
+    };
+
+    window.SC.Widget.Events = {
+      READY: 'READY',
+      PLAY: 'PLAY',
+      PAUSE: 'PAUSE',
+      FINISH: 'FINISH'
     };
     
     loadAPIStub = sinon.stub().returns(function(cb) {
@@ -79,6 +88,37 @@ describe('common-soundcloud', function() {
       player.pause();
 
       assert.ok(widgetMock.pause.called);
+    });
+  });
+
+  describe('events', function() {
+    it('should emit `ready` when loaded', function(done) {
+      var player = new SoundCloud('soundcloud-embed');
+      player.on('ready', done);
+
+      widgetMock.emit(SC.Widget.Events.READY);
+    });
+
+    it('should emit `play` when playing', function(done) {
+      var player = new SoundCloud('soundcloud-embed');
+
+      player.on('play', done);
+
+      widgetMock.emit(SC.Widget.Events.PLAY);
+    });
+
+    it('should emit `pause` when paused', function(done) {
+      var player = new SoundCloud('soundcloud-embed');
+
+      player.on('pause', done);
+      widgetMock.emit(SC.Widget.Events.PAUSE);
+    });
+
+    it('should emit `end` when finished', function(done) {
+      var player = new SoundCloud('soundcloud-embed');
+
+      player.on('end', done);
+      widgetMock.emit(SC.Widget.Events.FINISH);
     });
   });
 });
