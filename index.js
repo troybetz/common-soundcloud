@@ -6,6 +6,8 @@ var EventEmitter = require('events');
 var loadAPI = require('./lib/load-api');
 var prepareEmbed = require('./lib/prepare-embed');
 
+var sdk;
+
 /**
  * Expose `SoundCloud`
  */
@@ -13,7 +15,7 @@ var prepareEmbed = require('./lib/prepare-embed');
 module.exports = SoundCloud;
 
 /**
- * Create new `SoundCloud` player
+ * Create new `SoundCloud` controller
  *
  * @param {String} id of embedded widget
  */
@@ -21,7 +23,7 @@ module.exports = SoundCloud;
 function SoundCloud(id) {
   sdk = loadAPI();
   prepareEmbed(id);
-  this.createPlayer(id);
+  this.attachToEmbed(id);
 }
 
 /**
@@ -29,32 +31,6 @@ function SoundCloud(id) {
  */
 
 SoundCloud.prototype = new EventEmitter();
-
-/**
- * Create a controller for the widget
- *
- * @param {String} id of embedded widget
- * @api private
- */
-
-SoundCloud.prototype.createPlayer = function(id) {
-  var self = this;
-  sdk(function(err, SC) {
-    self.player = new window.SC.Widget(id);
-    self.bindEvents();
-  });
-};
-
-/**
- * Destroy a player
- *
- * @api public
- */
-
-SoundCloud.prototype.destroy = function() {
-  this.unbindEvents();
-  delete this.player;
-};
 
 /**
  * Play the track.
@@ -77,7 +53,35 @@ SoundCloud.prototype.pause = function() {
 };
 
 /**
- * Bind events to player
+ * Remove all event handlers and free up internal player for
+ * garbage collection.
+ *
+ * @api public
+ */
+
+SoundCloud.prototype.destroy = function() {
+  this.unbindEvents();
+  delete this.player;
+};
+
+/**
+ * Attach a controller to the embedded widget
+ *
+ * @param {String} id of embedded widget
+ * @api private
+ */
+
+SoundCloud.prototype.attachToEmbed = function(id) {
+  var self = this;
+
+  sdk(function(err, SC) {
+    self.player = new window.SC.Widget(id);
+    self.bindEvents();
+  });
+};
+
+/**
+ * Bind player events
  *
  * @api private
  */
@@ -103,7 +107,7 @@ SoundCloud.prototype.bindEvents = function() {
 };
 
 /**
- * Remove player event listeners;
+ * Unbind all player events
  *
  * @api private
  */

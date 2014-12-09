@@ -2,7 +2,6 @@
  * Module dependencies
  */
 
-var EventEmitter = require('events');
 var assert = require('assert');
 var sinon = require('sinon');
 var proxyquire = require('proxyquireify')(require);
@@ -10,7 +9,7 @@ var proxyquire = require('proxyquireify')(require);
 var apiStub = require('./helpers/widget-api-stub');
 var widgetStub = apiStub.widgetStub;
 
-window.SC = apiStub.SC
+window.SC = apiStub.SC;
 
 var soundcloudEmbed;
 var loadAPIStub;
