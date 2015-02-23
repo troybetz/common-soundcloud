@@ -14,7 +14,7 @@ $ npm install common-soundcloud
 
 ```js
 var SoundCloud = require('common-soundcloud');
-var player = SoundCloud('id-of-iframe');
+var player = new SoundCloud('id-of-iframe');
 
 player.on('ready', function() {
   player.play();
