@@ -21,7 +21,7 @@ describe('common-soundcloud', function() {
     /**
      * Add a fake embedded video to control
      */
-    
+
     soundcloudEmbed = document.createElement('iframe');
     soundcloudEmbed.src = '#';
     soundcloudEmbed.id = 'soundcloud-embed';
@@ -30,7 +30,7 @@ describe('common-soundcloud', function() {
     /**
      * Mock out load-api, return our api stub
      */
-    
+
     loadAPIStub = sinon.stub().returns(function(cb) {
       cb(null, window.SC);
     });
@@ -38,7 +38,7 @@ describe('common-soundcloud', function() {
     /**
      * Magic happens
      */
-    
+
     SoundCloud = proxyquire('../', {
       './lib/load-api': loadAPIStub
     });
@@ -105,14 +105,36 @@ describe('common-soundcloud', function() {
       player.on('end', done);
       widgetStub.emit(SC.Widget.Events.FINISH);
     });
+
+    it('should emit `playProgress` when playing, and pass returned audio object', function(done) {
+      var player = new SoundCloud('soundcloud-embed');
+      var expectedHash = { currentTime: 10 };
+
+      player.on('playProgress', function(e) {
+        assert.equal(e, expectedHash);
+        done();
+      });
+      widgetStub.emit(SC.Widget.Events.PLAY_PROGRESS, expectedHash);
+    });
+
+    it('should emit `loadProgress` when loading, and pass returned audio object', function(done) {
+      var player = new SoundCloud('soundcloud-embed');
+      var expectedHash = { currentTime: 10 };
+
+      player.on('loadProgress', function(e) {
+        assert.equal(e, expectedHash);
+        done();
+      });
+      widgetStub.emit(SC.Widget.Events.LOAD_PROGRESS, expectedHash);
+    });
   });
 
   describe('destruction', function() {
     it('should remove player event listeners', function() {
       var player = new SoundCloud('soundcloud-embed');
       player.destroy();
-      
-      assert.equal(widgetStub.unbind.callCount, 4);
+
+      assert.equal(widgetStub.unbind.callCount, 6);
     });
 
     it('should delete its internal player', function() {
