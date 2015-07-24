@@ -88,7 +88,7 @@ SoundCloud.prototype.attachToEmbed = function(id) {
 
 SoundCloud.prototype.bindEvents = function() {
   var self = this;
-  
+
   self.player.bind(window.SC.Widget.Events.READY, function() {
     self.emit('ready');
   });
@@ -104,6 +104,14 @@ SoundCloud.prototype.bindEvents = function() {
   self.player.bind(window.SC.Widget.Events.FINISH, function() {
     self.emit('end');
   });
+
+  self.player.bind(window.SC.Widget.Events.PLAY_PROGRESS, function(event) {
+    self.emit('playProgress', event);
+  });
+
+  self.player.bind(window.SC.Widget.Events.LOAD_PROGRESS, function(event) {
+    self.emit('loadProgress', event);
+  });
 };
 
 /**
@@ -117,4 +125,6 @@ SoundCloud.prototype.unbindEvents = function() {
   this.player.unbind(window.SC.Widget.Events.PLAY);
   this.player.unbind(window.SC.Widget.Events.PAUSE);
   this.player.unbind(window.SC.Widget.Events.FINISH);
+  this.player.unbind(window.SC.Widget.Events.PLAY_PROGRESS);
+  this.player.unbind(window.SC.Widget.Events.LOAD_PROGRESS);
 };
