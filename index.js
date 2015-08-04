@@ -88,21 +88,29 @@ SoundCloud.prototype.attachToEmbed = function(id) {
 
 SoundCloud.prototype.bindEvents = function() {
   var self = this;
-  
-  self.player.bind(window.SC.Widget.Events.READY, function() {
-    self.emit('ready');
+
+  self.player.bind(window.SC.Widget.Events.READY, function(event) {
+    self.emit('ready', event);
   });
 
-  self.player.bind(window.SC.Widget.Events.PLAY, function() {
-    self.emit('play');
+  self.player.bind(window.SC.Widget.Events.PLAY, function(event) {
+    self.emit('play', event);
   });
 
-  self.player.bind(window.SC.Widget.Events.PAUSE, function() {
-    self.emit('pause');
+  self.player.bind(window.SC.Widget.Events.PAUSE, function(event) {
+    self.emit('pause', event);
   });
 
-  self.player.bind(window.SC.Widget.Events.FINISH, function() {
-    self.emit('end');
+  self.player.bind(window.SC.Widget.Events.FINISH, function(event) {
+    self.emit('end', event);
+  });
+
+  self.player.bind(window.SC.Widget.Events.PLAY_PROGRESS, function(event) {
+    self.emit('playProgress', event);
+  });
+
+  self.player.bind(window.SC.Widget.Events.LOAD_PROGRESS, function(event) {
+    self.emit('loadProgress', event);
   });
 };
 
@@ -117,4 +125,6 @@ SoundCloud.prototype.unbindEvents = function() {
   this.player.unbind(window.SC.Widget.Events.PLAY);
   this.player.unbind(window.SC.Widget.Events.PAUSE);
   this.player.unbind(window.SC.Widget.Events.FINISH);
+  this.player.unbind(window.SC.Widget.Events.PLAY_PROGRESS);
+  this.player.unbind(window.SC.Widget.Events.LOAD_PROGRESS);
 };
